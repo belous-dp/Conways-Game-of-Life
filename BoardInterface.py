@@ -3,30 +3,20 @@ from Position import Position
 
 
 class BoardInterface:
-    default_size = 100
-    height: int = default_size
-    width: int = default_size
-
-    def get_cell(self, position: Position) -> Cell:
+    def get_cell(self, pos: Position) -> Cell:
         pass
 
-    def set_cell(self, position: Position, cell: Cell):
+    def set_cell(self, pos: Position, cell: Cell):
         pass
 
-    def set_cell_value(self, position: Position, value: bool):
+    def get_cell_neighbours(self, pos: Position) -> list[Position]:
         pass
 
-    def get_alive_cells_position(self) -> set:
+    def make_move(self):
         pass
 
-    def get_sum_of_neighbours(self, position: Position) -> int:
+    def add_glider(self, pos: Position):
         pass
 
-    def get_neighbours(self, position: Position) -> list:
-        pass
-
-    def to_ndarray(self):
-        pass
-
-    def invert_cell(self, position: Position):
+    def to_2d_array(self):
         pass
