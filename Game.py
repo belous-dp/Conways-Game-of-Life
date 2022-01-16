@@ -9,7 +9,6 @@ class Game:
 
     def __init__(self, board: BoardInterface):
         self.__board = board
-        # self.__interesting = self.__board.get_alive_cells_positions()
 
     def __update(self, frame_num, img):
         self.__board.make_move()

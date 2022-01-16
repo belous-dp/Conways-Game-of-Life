@@ -18,5 +18,8 @@ class BoardInterface:
     def add_glider(self, pos: Position):
         pass
 
+    def add_gosper_glider_gun(self, pos: Position):
+        pass
+
     def to_2d_array(self):
         pass

@@ -63,6 +63,9 @@ class FiniteRectangleBoard(BoardInterface):
                 res += 1
         return res
 
+    def __update_sum(self, pos: Position):
+        self.get_cell(pos).sum = self.__get_sum_of_neighbouring_cells(pos)
+
     def make_move(self):
         # next_alive = set()
         changed = set()
@@ -96,22 +99,44 @@ class FiniteRectangleBoard(BoardInterface):
         for pos in changed:
             self.get_cell(pos).invert()
         for pos in changed:
+            self.__update_sum(pos)
             for neighbour_pos in self.get_cell_neighbours(pos):
-                self.get_cell(neighbour_pos).sum = self.__get_sum_of_neighbouring_cells(neighbour_pos)
+                self.__update_sum(neighbour_pos)
 
     def add_glider(self, pos: Position):
         # TODO: обработка выхода за границы
         sz = 5
         glider = Grid.zeros_grid(sz, sz)
         glider[1][1].val = glider[2][2].val = glider[2][3].val = glider[3][1].val = glider[3][2].val = True
-        self.__board[pos.x:pos.x + sz, pos.y:pos.y + sz] = glider
-        for i in range(-1, sz + 1):
-            for j in range(-1, sz + 1):
-                nx = pos.x + i
-                ny = pos.y + j
-                npos = Position(nx, ny)
-                if self.__is_in_board(npos):
-                    self.__board[nx][ny].sum = self.__get_sum_of_neighbouring_cells(npos)
+        self.__pattern_update(pos, sz, sz, glider)
+
+    def add_gosper_glider_gun(self, pos: Position):
+        h = 11
+        w = 38
+        gun = Grid.zeros_grid(h, w)
+        gun[5][1].val = gun[6][1].val = gun[5][2].val = gun[6][2].val = True
+        gun[5][11].val = gun[6][11].val = gun[7][11].val = True
+        gun[4][12].val = gun[8][12].val = True
+        gun[3][13].val = gun[9][13].val = True
+        gun[3][14].val = gun[9][14].val = True
+        gun[6][15].val = True
+        gun[4][16].val = gun[8][16].val = True
+        gun[5][17].val = gun[6][17].val = gun[7][17].val = True
+        gun[6][18].val = True
+        gun[3][21].val = gun[4][21].val = gun[5][21].val = True
+        gun[3][22].val = gun[4][22].val = gun[5][22].val = True
+        gun[2][23].val = gun[6][23].val = True
+        gun[1][25].val = gun[2][25].val = gun[6][25].val = gun[7][25].val = True
+        gun[3][35].val = gun[4][35].val = gun[3][36].val = gun[4][36].val = True
+        self.__pattern_update(pos, h, w, gun)
+
+    def __pattern_update(self, pos, h, w, pattern):
+        self.__board[pos.x:pos.x + h, pos.y:pos.y + w] = pattern
+        for i in range(-1, h + 1):
+            for j in range(-1, w + 1):
+                cur_pos = Position(pos.x + i, pos.y + j)
+                if self.__is_in_board(cur_pos):
+                    self.__update_sum(cur_pos)
 
     def to_2d_array(self):
         res = np.empty([self.__height, self.__width], dtype=bool)
