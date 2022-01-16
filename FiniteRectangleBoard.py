@@ -28,11 +28,9 @@ class FiniteRectangleBoard(BoardInterface):
                 self.__board[i][j].sum = self.__get_sum_of_neighbouring_cells(Position(i, j))
 
     def get_cell(self, pos: Position) -> Cell:
-        # TODO: обработку ошибок выхода за границы
         return self.__board[pos.x][pos.y]
 
     def set_cell(self, pos: Position, cell: Cell):
-        # TODO: обработку ошибок выхода за границы
         self.__board[pos.x][pos.y] = cell
 
     def get_cell_neighbours(self, pos: Position) -> list[Position]:
@@ -104,11 +102,10 @@ class FiniteRectangleBoard(BoardInterface):
                 self.__update_sum(neighbour_pos)
 
     def add_glider(self, pos: Position):
-        # TODO: обработка выхода за границы
         sz = 5
         glider = Grid.zeros_grid(sz, sz)
         glider[1][1].val = glider[2][2].val = glider[2][3].val = glider[3][1].val = glider[3][2].val = True
-        self.__pattern_update(pos, sz, sz, glider)
+        self.__pattern_update(pos, sz, sz, glider, "glider")
 
     def add_gosper_glider_gun(self, pos: Position):
         h = 11
@@ -128,10 +125,18 @@ class FiniteRectangleBoard(BoardInterface):
         gun[2][23].val = gun[6][23].val = True
         gun[1][25].val = gun[2][25].val = gun[6][25].val = gun[7][25].val = True
         gun[3][35].val = gun[4][35].val = gun[3][36].val = gun[4][36].val = True
-        self.__pattern_update(pos, h, w, gun)
+        self.__pattern_update(pos, h, w, gun, "Gosper glider gun")
 
-    def __pattern_update(self, pos, h, w, pattern):
-        self.__board[pos.x:pos.x + h, pos.y:pos.y + w] = pattern
+    def __pattern_update(self, pos, h, w, pattern, pattern_name=""):
+        if pos.x < 0 or pos.x >= self.__height or pos.y < 0 or pos.y >= self.__width:
+            print(f"Warning: pattern {pattern_name} [{h}, {w}] at pos [{pos.x}, {pos.y}] is outside the board ",
+                  f"[{self.__height}, {self.__width}], so it was ignored", sep='')
+            return
+        if pos.x + h > self.__height or pos.y + w > self.__width:
+            print(f"Warning: pattern {pattern_name} [{h}, {w}] at pos [{pos.x}, {pos.y}] was trimmed to board size ",
+                  f"[{self.__height}, {self.__width}]", sep='')
+        self.__board[pos.x:pos.x + h, pos.y:pos.y + w] = \
+            pattern[:min(h, self.__height - pos.x), :min(w, self.__width - pos.y)]
         for i in range(-1, h + 1):
             for j in range(-1, w + 1):
                 cur_pos = Position(pos.x + i, pos.y + j)
