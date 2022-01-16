@@ -6,7 +6,6 @@ from Position import Position
 
 
 def main():
-    # TODO: комментарии
     # TODO: сохранение анимации
     # TODO: скорость анимации
 
@@ -22,23 +21,23 @@ def main():
                         help='creates Gosper glider gun at position (0, 0)')
     parser.add_argument('--add-gosper-glider-gun', nargs=2, type=int, action='append', default=[], dest='ggguns',
                         help='creates Gosper glider gun at the specified position', metavar='POSITION')
-    # TODO: импорт паттернов
+    # TODO: импорт паттернов из файлов
     args = parser.parse_args()
     if args.height <= 0 or args.width <= 0:
         print(f"Warning: invalid field size: [{args.height}, {args.width}]. The default value will be used.")
-    board = FiniteRectangleBoard(args.height, args.width)
+    board = FiniteRectangleBoard(args.height, args.width)  # создаём конкретную доску
     if args.glider:
         args.gliders.append([0, 0])
     if args.gosper_glider_gun:
         args.ggguns.append([0, 0])
     if args.gliders or args.ggguns:
-        board.clear()
+        board.clear()  # если добавились какие-то паттерны, то доска больше не рандомная. Сделаем её белой.
     for pos in args.gliders:
         board.add_glider(Position(pos[0], pos[1]))
     for pos in args.ggguns:
         board.add_gosper_glider_gun(Position(pos[0], pos[1]))
     game = Game(board)
-    game.play()
+    game.play()  # давайте сыграем в игру
 
 
 if __name__ == '__main__':

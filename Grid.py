@@ -5,7 +5,8 @@ import numpy as np
 from Cell import Cell
 
 
-def random_grid(height, width):
+# Возвращает доску заданного размера, заполненную случайными значениями
+def random_grid(height, width) -> np.array:
     grid = np.empty([height, width], dtype=Cell)
     for i in range(height):
         for j in range(width):
@@ -13,6 +14,7 @@ def random_grid(height, width):
     return grid
 
 
+# Возвращает доску заданного размера, заполненную значениями по умолчанию (то есть False)
 def zeros_grid(height, width):
     grid = np.empty([height, width], dtype=Cell)
     for i in range(height):

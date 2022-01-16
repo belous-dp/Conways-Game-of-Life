@@ -9,7 +9,7 @@ class BoardInterface:
     def set_cell(self, pos: Position, cell: Cell):
         pass
 
-    def get_cell_neighbours(self, pos: Position) -> list[Position]:
+    def get_neighbours(self, pos: Position) -> list[Position]:
         pass
 
     def make_move(self):

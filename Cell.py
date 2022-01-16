@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass  # чтобы не писать __init__
 
 
 @dataclass
@@ -6,6 +6,8 @@ class Cell:
     val: bool = False
     sum: int = 0
 
+    # В принципе мало какие из этих методов нужны, но раз уж создавать отдельный класс для bool'а, то давайте как-нибудь
+    # пафосно назовём их
     def is_alive(self):
         return self.val
 
